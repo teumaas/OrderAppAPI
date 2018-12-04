@@ -1,0 +1,55 @@
+// Category
+
+/categories - GET
+
+/category - POST
+/category/:cid - GET
+/category/:cid - PUT
+/category/:cid - DELETE
+
+/category/:id/product/:id - PUT > Add/Removes Product to a Category.
+
+// Menu
+
+/menus - GET
+
+/menu/ - POST
+/menu/:mid - GET
+/menu/:mid - PUT
+/menu/:mid - DELETE
+
+/menu/:mid/category/:id - PUT > Add/Removes Category to a Menu.
+
+// Order
+
+/orders - GET
+
+/order/ - POST
+/order/:oid - GET
+/order/:oid - PUT
+/order/:oid - DELETE
+
+// Product
+
+/products - GET
+
+/product/ - POST
+/product/:pid - GET
+/product/:pid - PUT
+/product/:pid - DELETE
+
+// Table
+
+/tables - GET
+
+/table/ - POST
+/table/:tid - GET
+/table/:tid - PUT
+/table/:tid - DELETE
+
+/table/:tid/user/:uid - PUT - CHECKIN/CHECKOUT User.
+
+// User
+
+/user/register
+/user/login
