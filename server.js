@@ -11,8 +11,12 @@ if (process.env.NODE_ENV !== 'test') {
     mongoose.connect('mongodb://localhost/orderapp', { useNewUrlParser: true, useFindAndModify: false });
 }
 
+// Middleware import.
+require('./src/middleware/passport.middleware');
+
 // routes import
 const userRoutes = require('./src/routes/user.routes');
+const productRoutes = require('./src/routes/product.routes');
 
 // custom made modules.
 const ApiError = require('./src/utilities/APIError.utility');
@@ -58,7 +62,8 @@ app.use('*', function(req, res, next){
 
 //Routes defined start.
 
-app.use('/users', userRoutes);
+app.use('/api', userRoutes);
+app.use('/api', productRoutes);
 
 //Routes defined end.
 
