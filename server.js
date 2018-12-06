@@ -3,7 +3,6 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const passport = require('passport');
 
 // Setup test database.
 mongoose.Promise = global.Promise;
@@ -11,8 +10,12 @@ if (process.env.NODE_ENV !== 'test') {
     mongoose.connect('mongodb://localhost/orderapp', { useNewUrlParser: true, useFindAndModify: false });
 }
 
+// Middlewar import.
+require('./src/middleware/auth.middleware');
+
 // routes import
 const userRoutes = require('./src/routes/user.routes');
+const productRoutes = require('./src/routes/product.routes');
 
 // custom made modules.
 const ApiError = require('./src/utilities/APIError.utility');
@@ -23,7 +26,7 @@ const app = express();
 // Port initialization.
 const port = process.env.PORT || 8080;
 
-// Base URL of API.
+// Base URL API.
 app.use('/api', express.static('public'));
 
 // Acces-Control
@@ -47,7 +50,7 @@ app.use(function (req, res, next) {
 });
 
 // bodyParser initialization.
-app.use(bodyParser.json());
+app.use(bodyParser.json({ extended : false }))
 
 // Morgan initialization.
 app.use(morgan('dev'));
@@ -57,8 +60,7 @@ app.use('*', function(req, res, next){
 });
 
 //Routes defined start.
-
-app.use('/users', userRoutes);
+app.use('/api', userRoutes);
 
 //Routes defined end.
 

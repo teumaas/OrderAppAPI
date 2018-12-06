@@ -1,17 +1,37 @@
 const ApiError = require('../utilities/APIError.utility');
 const User = require('../database/models/user.model');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 module.exports = {
-
-    //CRUD Thread - Start
-
     /**
      * @param {*} req The incoming request.
      * @param {*} res The resource.
      * @param {*} next ApiError when id is invalid.
      */
 
-    userLogin(req, res, next) { 
+    userLogin(req, res, next) {
+        passport.authenticate('login', async (err, user, info) => {     
+            try {
+                if (err || !user) {
+                    const error = new ApiError('An Error occured', 404)
+                    return next(error);
+                }
+
+                req.login(user, { session : false }, async (error) => {
+                    if(error) {
+                        return next(error)
+                    }
+                    const body = { _id : user._id, email : user.email };
+                    const token = jwt.sign({ user : body },'token');
+                    
+                    return res.json({ token });
+                });
+
+            } catch (error) {
+            return next(error);
+          }
+        })(req, res, next);
     },
 
     /**
@@ -20,7 +40,10 @@ module.exports = {
      * @param {*} next ApiError when id is invalid.
      */
 
-    userRegister (req, res, next) {
+    async userRegister (req, res, next) {
+        res.json({ 
+            message : 'Register successful',
+        });
     },
 
     /**
@@ -30,6 +53,9 @@ module.exports = {
      */
 
     userCurrent(req, res, next) {
-
+        res.json({
+            message : 'You made it to the secure route',
+            user : req.user
+          })
     }
 };
