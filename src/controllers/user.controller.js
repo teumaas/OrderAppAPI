@@ -48,10 +48,7 @@ module.exports = {
 
         user.save()
         .then(user => res.status(200).send({"Bearer" : user.generateJwt()}))
-        .catch((error) => {
-            console.log(error);
-            next(new ApiError('Something went wrong', 500));
-        });
+        .catch(next);
     },
 
     /**
@@ -65,9 +62,6 @@ module.exports = {
         .then((user) => {
             res.status(200).send("Working!");  
         })    
-        .catch((error) => {
-            console.log(error);
-            next(new ApiError('Something went wrong', 500));
-        });
+        .catch(next);
     }
 };

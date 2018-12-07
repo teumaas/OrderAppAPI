@@ -6,7 +6,7 @@ const CategorySchema = new Schema({
         type: String,
         required: [true, 'Title is required.']
     },
-    Product: [{
+    product: [{
         type: Schema.Types.ObjectId,
         ref: 'product',
         required: false

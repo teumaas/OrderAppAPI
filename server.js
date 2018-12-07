@@ -15,8 +15,12 @@ if (process.env.NODE_ENV !== 'test') {
 require('./src/middleware/passport.middleware');
 
 // routes import
-const userRoutes = require('./src/routes/user.routes');
+const categoryRoutes = require('./src/routes/category.routes');
+const menuRoutes = require('./src/routes/menu.routes');
+const orderRoutes = require('./src/routes/order.routes');
 const productRoutes = require('./src/routes/product.routes');
+const tableRoutes = require('./src/routes/table.routes');
+const userRoutes = require('./src/routes/user.routes');
 
 // custom made modules.
 const ApiError = require('./src/utilities/APIError.utility');
@@ -61,10 +65,12 @@ app.use('*', function(req, res, next){
 });
 
 //Routes defined start.
-
-app.use('/api', userRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', menuRoutes);
+app.use('/api', orderRoutes);
 app.use('/api', productRoutes);
-
+app.use('/api', tableRoutes);
+app.use('/api', userRoutes);
 //Routes defined end.
 
 //Endpoint error handeling.
@@ -73,8 +79,9 @@ app.use('*', function (req, res, next) {
 	next(error);
 });
 
+//This is the error handler which handles errors that were passed through next()
 app.use((err, req, res, next) => {
-	res.status((err.code || 404)).json(err).end();
+    res.status(422).send({ error: err.message });
 });
 
 //Server run log.

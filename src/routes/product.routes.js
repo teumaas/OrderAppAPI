@@ -7,6 +7,11 @@ const routes = express.Router();
 
 const productController = require('../controllers/product.controller');
 
-routes.get('/products', auth,  productController.getAll);
+routes.get('/products', auth,  productController.getAllProduct);
+
+routes.post('/product', auth,  productController.postProduct);
+routes.get('/product', auth,  productController.getProduct);
+routes.put('/product', auth,  productController.putProduct);
+routes.delete('/product', auth,  productController.deleteProduct);
 
 module.exports = routes;
