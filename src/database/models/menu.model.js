@@ -11,7 +11,7 @@ const MenuSchema = new Schema({
         ref: 'category',
         required: false
     }],
-});
+}, { versionKey: false });
 
 const Menu = mongoose.model('Menu', MenuSchema);
 

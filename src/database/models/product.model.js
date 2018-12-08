@@ -31,7 +31,7 @@ const ProductSchema = new Schema({
         type: Number,
         required: [true, 'Price is required.']
     }
-});
+}, { versionKey: false });
 
 const Product = mongoose.model('Product', ProductSchema);
 

@@ -1,4 +1,5 @@
 const Product = require('../database/models/product.model');
+const Category = require('../database/models/category.model');
 
 module.exports = {
 
@@ -10,6 +11,7 @@ module.exports = {
 
     getAllProduct(req, res, next) {
         Product.find()
+            .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
             .then(product => res.send(product))
             .catch(next);
     },
@@ -38,6 +40,7 @@ module.exports = {
         const productID = req.body._id;
 
         Product.findOne({ _id: productID })
+            .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
             .then(product => res.send(product))
             .catch(next);
     },
@@ -54,6 +57,7 @@ module.exports = {
         const productBody = req.body;
 
         Product.findOneAndUpdate({ _id: productID }, productBody)
+            .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
             .then(() => Product.findById({ _id: productID }))
             .then(product => res.send(product))
             .catch(next);

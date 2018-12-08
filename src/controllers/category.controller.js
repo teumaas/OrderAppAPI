@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Category = require('../database/models/category.model');
 const Product = require('../database/models/product.model');
 
@@ -11,6 +12,7 @@ module.exports = {
 
     getAllCategory(req, res, next) {
         Category.find()
+            .populate({ path: 'product', model: 'Product' })
             .then(category => res.send(category))
             .catch(next);
     },
@@ -39,6 +41,7 @@ module.exports = {
         const categoryID = req.body._id;
 
         Category.findOne({ _id: categoryID })
+            .populate({ path: 'product', model: 'Product' })
             .then(category => res.send(category))
             .catch(next);
     },
@@ -54,6 +57,7 @@ module.exports = {
         const categoryBody = req.body;
 
         Category.findOneAndUpdate({ _id: categoryID }, categoryBody)
+            .populate({ path: 'product', model: 'Product' })
             .then(() => Category.findById({ _id: categoryID }))
             .then(category => res.send(category))
             .catch(next);
@@ -84,6 +88,7 @@ module.exports = {
         const productID = req.body.productID;
 
         Category.findOneAndUpdate({ _id: categoryID }, { $addToSet: { product:  productID } })
+            .populate({ path: 'product', model: 'Product' })
             .then(() => Category.findById({ _id: categoryID }))
             .then(category => res.send(category))
             .catch(next);
@@ -97,9 +102,10 @@ module.exports = {
 
     removeProductToCategory(req, res, next) {
         const categoryID = req.body._id;
-        const productID = req.body.userId;
+        const productID = req.body.productID;
 
         Category.findOneAndUpdate({ _id: categoryID }, { $pull: { product: productID }})
+            .populate({ path: 'product', model: 'Product' })
             .then(() => Category.findById({ _id: categoryID }))
             .then(category => res.send(category))
             .catch(next);

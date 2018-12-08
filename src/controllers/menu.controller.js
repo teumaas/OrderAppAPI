@@ -1,5 +1,6 @@
 const Menu = require('../database/models/menu.model');
 const Category = require('../database/models/category.model');
+const Product = require('../database/models/product.model');
 
 module.exports = {
 
@@ -11,6 +12,7 @@ module.exports = {
 
     getAllMenu(req, res, next) {
         Menu.find()
+            .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(menu => res.send(menu))
             .catch(next);
     },
@@ -39,6 +41,7 @@ module.exports = {
         const menuID = req.body._id;
 
         Menu.findOne({ _id: menuID })
+            .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(menu => res.send(menu))
             .catch(next);
     },
@@ -54,6 +57,7 @@ module.exports = {
         const menuBody = req.body;
 
         Menu.findOneAndUpdate({ _id: menuID }, menuBody)
+            .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(() => Menu.findById({ _id: menuID }))
             .then(menu => res.send(menu))
             .catch(next);
@@ -84,6 +88,7 @@ module.exports = {
         const categoryID = req.body.categoryID;
 
         Menu.findOneAndUpdate({ _id: menuID }, { $addToSet: { category:  categoryID } })
+            .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(() => Menu.findById({ _id: menuID }))
             .then(menu => res.send(menu))
             .catch(next);
@@ -100,6 +105,7 @@ module.exports = {
         const categoryID = req.body.categoryID;
 
         Menu.findOneAndUpdate({ _id: menuID }, { $pull: { category: categoryID }})
+            .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(() => Menu.findById({ _id: menuID }))
             .then(menu => res.send(menu))
             .catch(next);

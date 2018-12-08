@@ -11,6 +11,7 @@ module.exports = {
 
     getAllTable(req, res, next) {
         Table.find()
+            .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(table => res.send(table))
             .catch(next);
     },
@@ -39,6 +40,7 @@ module.exports = {
         const tableID = req.body._id;
 
         Table.findOne({ _id: tableID })
+            .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(table => res.send(table))
             .catch(next);
     },
@@ -54,6 +56,7 @@ module.exports = {
         const tableBody = req.body;
 
         Table.findOneAndUpdate({ _id: tableID }, tableBody)
+            .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
             .then(table => res.send(table))
             .catch(next);
@@ -81,9 +84,10 @@ module.exports = {
 
     checkInUser(req, res, next) {
         const tableID = req.body._id;
-        const userID = req.body.userId;
+        const userID = req.body.userID;
 
         Table.findOneAndUpdate({ _id: tableID }, { $addToSet: { user:  userID } })
+            .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
             .then(table => res.send(table))
             .catch(next);
@@ -97,9 +101,10 @@ module.exports = {
 
     checkOutUser(req, res, next) {
         const tableID = req.body._id;
-        const userID = req.body.userId;
+        const userID = req.body.userID;
 
         Table.findOneAndUpdate({ _id: tableID }, { $pull: { user: userID }})
+            .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
             .then(table => res.send(table))
             .catch(next);
