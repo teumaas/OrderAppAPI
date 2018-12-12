@@ -12,7 +12,7 @@ const OrderSchema = new Schema({
         ref: 'table',
         required: [true, 'Table is required.']
     }
-});
+}, { versionKey: false });
 
 const Order = mongoose.model('Order', OrderSchema);
 

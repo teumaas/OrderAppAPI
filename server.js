@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const cors = require('cors');
 
 // Setup test database.
 mongoose.Promise = global.Promise;
@@ -15,8 +16,12 @@ if (process.env.NODE_ENV !== 'test') {
 require('./src/middleware/passport.middleware');
 
 // routes import
-const userRoutes = require('./src/routes/user.routes');
+const categoryRoutes = require('./src/routes/category.routes');
+const menuRoutes = require('./src/routes/menu.routes');
+const orderRoutes = require('./src/routes/order.routes');
 const productRoutes = require('./src/routes/product.routes');
+const tableRoutes = require('./src/routes/table.routes');
+const userRoutes = require('./src/routes/user.routes');
 
 // custom made modules.
 const ApiError = require('./src/utilities/APIError.utility');
@@ -31,24 +36,7 @@ const port = process.env.PORT || 8080;
 app.use('/api', express.static('public'));
 
 // Acces-Control
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', false);
-
-    // Pass to next layer of middleware
-    next();
-});
+app.use(cors());
 
 // bodyParser initialization.
 app.use(bodyParser.json());
@@ -61,10 +49,12 @@ app.use('*', function(req, res, next){
 });
 
 //Routes defined start.
-
-app.use('/api', userRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', menuRoutes);
+app.use('/api', orderRoutes);
 app.use('/api', productRoutes);
-
+app.use('/api', tableRoutes);
+app.use('/api', userRoutes);
 //Routes defined end.
 
 //Endpoint error handeling.
@@ -73,8 +63,9 @@ app.use('*', function (req, res, next) {
 	next(error);
 });
 
+//This is the error handler which handles errors that were passed through next()
 app.use((err, req, res, next) => {
-	res.status((err.code || 404)).json(err).end();
+    res.status(422).send({ error: err.message });
 });
 
 //Server run log.

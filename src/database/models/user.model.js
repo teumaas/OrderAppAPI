@@ -21,7 +21,7 @@ const UserSchema = new Schema({
     },
     hash: String,
     salt: String
-});
+}, { versionKey: false });
 
 UserSchema.methods.setPassword = function(password){
     this.salt = crypto.randomBytes(16).toString('hex');

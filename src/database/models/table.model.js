@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TableSchema = new Schema({
-    tableNumber: {
+    number: {
         type: Number,
         required: [true, 'TableNumber is required.']
     },
@@ -11,7 +11,7 @@ const TableSchema = new Schema({
         ref: 'user',
         required: false
     }],
-});
+}, { versionKey: false });
 
 const Table = mongoose.model('Table', TableSchema);
 

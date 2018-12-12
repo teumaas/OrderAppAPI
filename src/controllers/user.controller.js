@@ -23,7 +23,10 @@ module.exports = {
               token = user.generateJwt();
               res.status(200);
               res.json({
-                "Bearer" : token
+                "token" : token,
+                "firstname" : user.firstname,
+                "lastname" : user.lastname,
+                "email" : user.email
               });
             } else {
               res.status(401).json(info);
@@ -47,27 +50,21 @@ module.exports = {
         user.setPassword(req.body.password);
 
         user.save()
-        .then(user => res.status(200).send({"Bearer" : user.generateJwt()}))
-        .catch((error) => {
-            console.log(error);
-            next(new ApiError('Something went wrong', 500));
-        });
+        .then(user => res.status(200).send({"token" : user.generateJwt()}))
+        .catch(next);
     },
 
-    /**
-     * @param {*} req The incoming request.
-     * @param {*} res The resource.
-     * @param {*} next ApiError when id is invalid.
-     */
-
-    userCurrent(req, res, next) {
-        User.findById(assert(typeof (req.payload._id) === 'string', 'No Bearer-token!'))
-        .then((user) => {
-            res.status(200).send("Working!");  
-        })    
-        .catch((error) => {
-            console.log(error);
-            next(new ApiError('Something went wrong', 500));
-        });
+    userLoggedIn(req, res, next) {
+        if (!req.payload._id) {
+            res.status(401).json({
+              "message" : "UnauthorizedError: private profile"
+            });
+          } else {
+            User
+              .findById(req.payload._id)
+              .exec(function(err, user) {
+                res.status(200).json(user);
+              });
+        }
     }
 };
