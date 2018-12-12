@@ -38,7 +38,7 @@ module.exports = {
      */
 
     getMenu(req, res, next) {
-        const menuID = req.body._id;
+        const menuID = req.params.id;
 
         Menu.findOne({ _id: menuID })
             .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
@@ -70,7 +70,7 @@ module.exports = {
      */
 
     deleteMenu(req, res, next) {
-        const menuID = req.body._id;
+        const menuID = req.params.id;
 
         Menu.findByIdAndDelete({ _id: menuID })
             .then(res.status(200).json({"message": "Successfully removed!"}))

@@ -37,7 +37,7 @@ module.exports = {
      */
 
     getProduct(req, res, next) {
-        const productID = req.body._id;
+        const productID = req.params.id;
 
         Product.findOne({ _id: productID })
             .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
@@ -70,7 +70,7 @@ module.exports = {
      */
 
     deleteProduct(req, res, next) {
-        const productID = req.body._id;
+        const productID = req.params.id;
 
         Product.findByIdAndDelete({ _id: productID })
             .then(res.status(200).json({"message": "Successfully removed!"}))

@@ -10,8 +10,8 @@ const productController = require('../controllers/product.controller');
 routes.get('/products', auth,  productController.getAllProduct);
 
 routes.post('/product', auth,  productController.postProduct);
-routes.get('/product', auth,  productController.getProduct);
+routes.get('/product/:id', auth,  productController.getProduct);
 routes.put('/product', auth,  productController.putProduct);
-routes.delete('/product', auth,  productController.deleteProduct);
+routes.delete('/product/:id', auth,  productController.deleteProduct);
 
 module.exports = routes;

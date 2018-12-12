@@ -37,7 +37,7 @@ module.exports = {
      */
 
     getTable(req, res, next) {
-        const tableID = req.body._id;
+        const tableID = req.params.id;
 
         Table.findOne({ _id: tableID })
             .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
@@ -69,7 +69,7 @@ module.exports = {
      */
 
     deleteTable(req, res, next) {
-        const tableID = req.body._id;
+        const tableID = req.params.id;
 
         Table.findByIdAndDelete({ _id: tableID })
             .then(res.status(200).json({"message": "Successfully removed!"}))

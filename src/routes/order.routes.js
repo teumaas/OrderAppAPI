@@ -10,8 +10,8 @@ const orderController = require('../controllers/order.controller');
 routes.get('/orders', auth,  orderController.getAllOrder);
 
 routes.post('/order', auth,  orderController.postOrder);
-routes.get('/order', auth,  orderController.getOrder);
+routes.get('/order/:id', auth,  orderController.getOrder);
 routes.put('/order', auth,  orderController.putOrder);
-routes.delete('/order', auth,  orderController.deleteOrder);
+routes.delete('/order/:id', auth,  orderController.deleteOrder);
 
 module.exports = routes;

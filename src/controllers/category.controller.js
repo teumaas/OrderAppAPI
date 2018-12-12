@@ -38,7 +38,7 @@ module.exports = {
      */
 
     getCategory(req, res, next) {
-        const categoryID = req.body._id;
+        const categoryID = req.params.id;
 
         Category.findOne({ _id: categoryID })
             .populate({ path: 'product', model: 'Product' })
@@ -70,7 +70,7 @@ module.exports = {
      */
 
     deleteCategory(req, res, next) {
-        const categoryID = req.body._id;
+        const categoryID = req.params.id;
 
         Category.findByIdAndDelete({ _id: categoryID })
             .then(res.status(200).json({"message": "Successfully removed!"}))

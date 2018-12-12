@@ -10,9 +10,9 @@ const menuController = require('../controllers/menu.controller');
 routes.get('/menus', auth,  menuController.getAllMenu);
 
 routes.post('/menu', auth,  menuController.postMenu);
-routes.get('/menu', auth,  menuController.getMenu);
+routes.get('/menu/:id', auth,  menuController.getMenu);
 routes.put('/menu', auth,  menuController.putMenu);
-routes.delete('/menu', auth,  menuController.deleteMenu);
+routes.delete('/menu/:id', auth,  menuController.deleteMenu);
 
 routes.post('/menu/category', auth,  menuController.addCategoryToMenu);
 routes.delete('/menu/category', auth,  menuController.removeCategoryToMenu);

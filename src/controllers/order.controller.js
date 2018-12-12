@@ -39,7 +39,7 @@ module.exports = {
      */
 
     getOrder(req, res, next) {
-        const orderID = req.body._id;
+        const orderID = req.params.id;
 
         Order.findOne({ _id: orderID })
             .populate({ path: 'product', model: 'Product' })
@@ -73,7 +73,7 @@ module.exports = {
      */
 
     deleteOrder(req, res, next) {
-        const orderID = req.body._id;
+        const orderID = req.params.id;
 
         Order.findByIdAndDelete({ _id: orderID })
             .then(res.status(200).json({"message": "Successfully removed!"}))
