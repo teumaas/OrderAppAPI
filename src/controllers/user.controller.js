@@ -63,7 +63,12 @@ module.exports = {
             User
               .findById(req.payload._id)
               .exec(function(err, user) {
-                res.status(200).json(user);
+                res.status(200);
+                res.json({
+                  "firstname" : user.firstname,
+                  "lastname" : user.lastname,
+                  "email" : user.email
+                });
               });
         }
     }

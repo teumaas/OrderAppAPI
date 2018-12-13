@@ -55,5 +55,5 @@
 
 // User
 
-/user/register - POST
-/user/login - POST
+/users/register - POST
+/users/login - POST

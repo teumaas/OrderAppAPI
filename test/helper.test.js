@@ -3,7 +3,7 @@ const app = require('../server');
 
 before(done => {
     // MongoDB test DB connection
-    mongoose.connect('mongodb://localhost/orderapp-test', { useNewUrlParser: true, useFindAndModify: false });
+    mongoose.connect('mongodb://tjesmits:xUW4ZtyPb3Dq4c8g@ds249372.mlab.com:49372/orderapp-test', { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
     mongoose.connection
         .once('open', () => done())
         .on('error', err => {
