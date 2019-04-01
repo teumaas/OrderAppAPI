@@ -9,7 +9,7 @@ const cors = require('cors');
 // Setup test database.
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV !== 'test') {
-    mongoose.connect('mongodb://tjesmits:xUW4ZtyPb3Dq4c8g@ds159782.mlab.com:59782/orderapp', { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
+    mongoose.connect('mongodb://tjesmits:E8NuQYRsn9FH9nu7@ds159782.mlab.com:59782/orderapp', { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 }
 
 // Middleware import.
