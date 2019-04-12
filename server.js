@@ -9,7 +9,7 @@ const cors = require('cors');
 // Setup test database.
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV !== 'test') {
-    mongoose.connect('mongodb://tjesmits:E8NuQYRsn9FH9nu7@ds159782.mlab.com:59782/orderapp', { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
+    mongoose.connect('mongodb://teumaas:ditiseengeheim123@ds159782.mlab.com:59782/orderapp', { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true });
 }
 
 // Middleware import.
@@ -71,6 +71,7 @@ app.use((err, req, res, next) => {
 //Server run log.
 app.listen(port, () => {
 	console.log(`Server running on port *:${port}`);
+	
 });
 
 module.exports = app;
