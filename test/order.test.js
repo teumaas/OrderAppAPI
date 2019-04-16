@@ -46,14 +46,14 @@ describe('Tests for - orders.controller - /api/orders GET', function() {
         
         tableOne.save();
         tableTwo.save().then(() => { 
-            const orderTwo = new Order({
-                product: productTwo._id,
-                table: tableTwo._id
-            });
-
             const orderOne = new Order({
                 product: productOne._id,
                 table: tableOne._id
+            });
+
+            const orderTwo = new Order({
+                product: productTwo._id,
+                table: tableTwo._id
             });
 
             orderOne.save();
@@ -66,7 +66,6 @@ describe('Tests for - orders.controller - /api/orders GET', function() {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
                 
-                res.body[0].product[0].should.have.property('_id').equals(productOne._id.toString());
                 res.body[0].product[0].should.have.property('name').equals('Name product one.');
                 res.body[0].product[0].should.have.property('brand').equals('Brand product one.');
                 res.body[0].product[0].should.have.property('description').equals('Description product one.');
@@ -77,7 +76,6 @@ describe('Tests for - orders.controller - /api/orders GET', function() {
                 res.body[0].table.should.have.property('_id').equals(orderOne.table._id.toString());    
                 res.body[0].table.should.have.property('number').equals(tableOne.number);
 
-                res.body[1].product[0].should.have.property('_id').equals(productTwo._id.toString());
                 res.body[1].product[0].should.have.property('name').equals('Name product two.');
                 res.body[1].product[0].should.have.property('brand').equals('Brand product two.');
                 res.body[1].product[0].should.have.property('description').equals('Description product two.');

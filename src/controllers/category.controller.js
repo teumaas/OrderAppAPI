@@ -43,7 +43,13 @@ module.exports = {
 
         Category.findOne({ _id: categoryID })
             .populate({ path: 'product', model: 'Product' })
-            .then(category => res.send(category))
+            .then(category => {
+                if(category !== null){
+                    res.send(category);
+                } else {
+                    next(new ApiError("Category doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -60,7 +66,13 @@ module.exports = {
         Category.findOneAndUpdate({ _id: categoryID }, categoryBody)
             .populate({ path: 'product', model: 'Product' })
             .then(() => Category.findById({ _id: categoryID }))
-            .then(category => res.send(category))
+            .then(category => {
+                if(category !== null){
+                    res.send(category);
+                } else {
+                    next(new ApiError("Category doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -74,7 +86,13 @@ module.exports = {
         const categoryID = req.params.id;
 
         Category.findByIdAndDelete({ _id: categoryID })
-            .then(res.status(200).json({"message": "Successfully removed!"}))
+            .then(category => {
+                if(category !== null){
+                    res.status(200).json({"message": "Successfully removed!"});
+                } else {
+                    next(new ApiError("Category doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
     
