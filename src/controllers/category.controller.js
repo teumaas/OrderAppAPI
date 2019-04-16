@@ -1,3 +1,4 @@
+const ApiError = require('../utilities/APIError.utility');
 const mongoose = require('mongoose');
 const Category = require('../database/models/category.model');
 const Product = require('../database/models/product.model');

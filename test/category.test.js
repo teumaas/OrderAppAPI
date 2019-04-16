@@ -1,100 +1,64 @@
-// const app = require('../server');
+const app = require('../server');
 
-// const chai = require('chai');
-// const chaiHttp = require('chai-http');
+const Product = require('../src/database/models/product.model');
+const Category = require('../src/database/models/category.model');
 
-// chai.use(chaiHttp);
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const assert = require('assert');
+const mongoose = require('mongoose');
 
-// const Category = require('../src/database/models/category.model');
-// const User = require('../src/database/models/user.model');
-// const expect = chai.expect;
-// const assert = chai.assert;
+chai.should();
+chai.use(chaiHttp);
 
-// const dummyUser = {
-//     firstname: "John",
-//     lastname: "Doe",
-//     email: "john@doe.com",
-//     password: "secret123"
-// };
+const testUserToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Y2IxZjE4YTI5YzcyZDZjODhjZTU2NDYiLCJsYXN0bmFtZSI6IkRvZSIsImVtYWlsIjoiam9obkBkb2UuY29tIiwiZXhwIjoxNTU1NzcwMzc4LCJpYXQiOjE1NTUxNjU1Nzh9.6Iq6OKFYuYEQKZGa8LbzLHNRia7nN0tYKDH-6DvGJQo';
 
-// const testJWT = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YzExNjdlZDY1ZjMzZjM1N2NhMDZiYzgiLCJsYXN0bmFtZSI6IlNtaXRzIiwiZW1haWwiOiJ0bXNtaXRzQGdtYWlsLmNvbSIsImV4cCI6MTU0NTI0OTM4OSwiaWF0IjoxNTQ0NjQ0NTg5fQ.yPuDbLJqVtVR1Aycos1r_P4s511MgUK7Furjk-isESM';
-// const invalidTestJWT = 'Bearer eyWefGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNTQ0NjIxMzAzLCJleHAiOjE1NzYxNTczMDN9.taqaX6EPam5gKF6duW7fliYHJfaUP2I2sPor6eOcKG8';
+describe('Tests for - menu.controller - /api/categories GET', function() {
+    it.only('tries to create a product then creates two categories with the product id of before created prodict, then tries to get all the new created categories and checks on status 200 and if its a response with array also the properies will be checked.', (done) => {
+        const product = new Product({
+            name: 'Name product',
+            brand: 'Brand product',
+            description: 'description product',
+            price: 1.00,
+        });
 
-// describe('Category controller', function() {
-//     this.timeout(5000);
+        product.save()
+        .then(() => { 
 
-//     it('Gets all /api/catergories retrieves array and returns 200.', (done) => {
-//         request(app)
-//             .get('/api/categories')
-//             .end((err, res) => {
-//                 assert(res.statusCode === 200);
-//                 done();
-//             })
-//     });
+            const categoryOne = new Category({
+                title: "Test category one.",
+                product: product._id.toString(),
+            });
 
-//     it('Post to /api/category with valid Category posts test category and returns 200.', done => {
-//         const testCategory = new Category({
-//             title: 'TestCategory',
-//             product: '5bfe91fa286cf6587cb3d8b4',
-//             imagePath: 'http://www.test.nl/test.jpg'
-//         });
+            const categoryTwo = new Category({
+                title: "Test category two.",
+                product: product._id.toString(),
+            });
     
-//         request(app)
-//             .post('/api/category')
-//             .set('Authorization', testJWT)
-//             .send(testCategory)
-//             .end((err, res) => {
-//                 assert(res.body.title === 'TestCategory');
-//                 assert(res.body.product === '5bfe91fa286cf6587cb3d8b4');
-//                 assert(res.body.imagePath === 'http://www.test.nl/test.jpg');
-//                 assert(res.statusCode === 200);
-//                 done();
-//             })
-//     });
+            categoryOne.save();
+            categoryTwo.save();
+                chai.request(app)
+                .get('/api/categories')
+                .set('Authorization' ,`Bearer ${testUserToken}`)
+                .then((res, err) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('array');
 
-//     it('Post to /api/category with missing parameter returns 422.', done => {
-//         const testCategory = new Category({
-//             product: '5bfe91fa286cf6587cb3d8b4',
-//             imagePath: 'http://www.test.nl/test.jpg'
-//         });
+                        res.body[0].should.have.property('_id').equals(categoryOne._id.toString());
+                        res.body[0].should.have.property('title').equals(categoryOne.title.toString());
+                        res.body[0].product[0].should.have.property('name').contain(product.name.toString());
+                        res.body[0].product[0].should.have.property('_id').contain(product._id.toString());
 
-//         request(app)
-//             .post('/api/category')
-//             .set('Authorization',testJWT)
-//             .send(testCategory)
-//             .end((err, res) => {
-//                 assert(res.statusCode === 422);
-//                 done();
-//             })
-//     });
-
-//     it('Put to /api/artist/ with valid Artist edits existing test artist and returns 200.', done => {
-//         const testCategory = new Category({
-//             title: 'TestCategory',
-//             product: '5bfe91fa286cf6587cb3d8b4',
-//             imagePath: 'http://www.test.nl/test.jpg'
-//         });
-
-//         const testEditCategory = new Category({
-//             title: 'TestCategoryEdit',
-//             product: '5bfe91fa286cf6587cb3d8b4',
-//             imagePath: 'http://www.test.nl/test.jpg'
-//         });
-
-//         testCategory.save().then(() => {
-//             request(app)
-//                 .put('/api/category/')
-//                 .set('Authorization',testJWT)
-//                 .set('name',testCategory.title)
-//                 .send(testEditCategory)
-//                 .end((err, res) => {
-//                     assert(res.body.title === 'TestCategory');
-//                     assert(res.body.product === '5bfe91fa286cf6587cb3d8b4');
-//                     assert(res.body.imagePath === 'http://www.test.nl/test.jpg');
-//                     assert(res.statusCode === 200);
-//                     done();
-//                 })
-//         });
-//     });
-// });
-
+                        res.body[1].should.have.property('_id').equals(categoryTwo._id.toString());
+                        res.body[1].should.have.property('title').equals(categoryTwo.title.toString());
+                        res.body[1].product[0].should.have.property('_id').contain(product._id.toString());
+                        res.body[1].product[0].should.have.property('name').contain(product.name.toString());
+                 
+                        done(err);
+                })
+                .catch(err => {
+                    done(err);
+                });
+        });
+    });
+});

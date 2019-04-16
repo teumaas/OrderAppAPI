@@ -1,6 +1,8 @@
 const Table = require('../database/models/table.model');
 const User = require('../database/models/user.model');
 
+const ApiError = require('../utilities/APIError.utility');
+
 module.exports = {
 
     /**
@@ -41,7 +43,13 @@ module.exports = {
 
         Table.findOne({ _id: tableID })
             .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
-            .then(table => res.send(table))
+            .then(table => {
+                if(table !== null){
+                    res.send(table);
+                } else {
+                    next(new ApiError("Table doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -58,7 +66,13 @@ module.exports = {
         Table.findOneAndUpdate({ _id: tableID }, tableBody)
             .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
-            .then(table => res.send(table))
+            .then(table => {
+                if(table !== null){
+                    res.send(table);
+                } else {
+                    next(new ApiError("Table doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -72,7 +86,13 @@ module.exports = {
         const tableID = req.params.id;
 
         Table.findByIdAndDelete({ _id: tableID })
-            .then(res.status(200).json({"message": "Successfully removed!"}))
+            .then(table => {
+                if(table !== null){
+                    res.status(200).json({"message": "Successfully removed!"})
+                } else {
+                    next(new ApiError("Table doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
     
@@ -89,7 +109,13 @@ module.exports = {
         Table.findOneAndUpdate({ _id: tableID }, { $addToSet: { user:  userID } })
             .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
-            .then(table => res.send(table))
+            .then(table => {
+                if(table !== null){
+                    res.send(table);
+                } else {
+                    next(new ApiError("Table doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -106,7 +132,13 @@ module.exports = {
         Table.findOneAndUpdate({ _id: tableID }, { $pull: { user: userID }})
             .populate({ path: 'user', model: 'User', select: { '_id': 1, 'firstname': 1, 'lastname': 1, 'email': 1 } })
             .then(() => Table.findById({ _id: tableID }))
-            .then(table => res.send(table))
+            .then(table => {
+                if(table !== null){
+                    res.send(table);
+                } else {
+                    next(new ApiError("Table doesn't exist!", 422));
+                }
+            })
             .catch(next);
     }
 };

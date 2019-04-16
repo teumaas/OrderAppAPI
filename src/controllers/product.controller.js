@@ -1,3 +1,4 @@
+const ApiError = require('../utilities/APIError.utility');
 const Product = require('../database/models/product.model');
 const Category = require('../database/models/category.model');
 
@@ -26,7 +27,13 @@ module.exports = {
         const productBody = req.body;
 
         Product.create(productBody)
-            .then(product => res.send(product))
+            .then(product => {
+                if(product !== null){
+                    res.send(product);
+                } else {
+                    next(new ApiError("Product doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -41,7 +48,13 @@ module.exports = {
 
         Product.findOne({ _id: productID })
             .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
-            .then(product => res.send(product))
+            .then(product => {
+                if(product !== null){
+                    res.send(product);
+                } else {
+                    next(new ApiError("Product doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -59,7 +72,13 @@ module.exports = {
         Product.findOneAndUpdate({ _id: productID }, productBody)
             .populate({ path: 'category', model: 'Category', select: { '_id': 1, 'title': 1, 'imagePath': 1} })
             .then(() => Product.findById({ _id: productID }))
-            .then(product => res.send(product))
+            .then(product => {
+                if(product !== null){
+                    res.send(product);
+                } else {
+                    next(new ApiError("Product doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -73,7 +92,13 @@ module.exports = {
         const productID = req.params.id;
 
         Product.findByIdAndDelete({ _id: productID })
-            .then(res.status(200).json({"message": "Successfully removed!"}))
+            .then(product => {
+                if(product !== null){
+                    res.status(200).json({"message": "Successfully removed!"});
+                } else {
+                    next(new ApiError("Product doesn't exist!", 422));
+                }
+            })
             .catch(next);
     }
 };

@@ -1,3 +1,4 @@
+const ApiError = require('../utilities/APIError.utility');
 const Menu = require('../database/models/menu.model');
 const Category = require('../database/models/category.model');
 const Product = require('../database/models/product.model');
@@ -42,7 +43,13 @@ module.exports = {
 
         Menu.findOne({ _id: menuID })
             .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
-            .then(menu => res.send(menu))
+            .then(menu => {
+                if(menu !== null){
+                    res.send(menu);
+                } else {
+                    next(new ApiError("Menu doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -59,7 +66,13 @@ module.exports = {
         Menu.findOneAndUpdate({ _id: menuID }, menuBody)
             .populate({ path: 'category', model: 'Category', populate: { path: 'product', model: 'Product' } })
             .then(() => Menu.findById({ _id: menuID }))
-            .then(menu => res.send(menu))
+            .then(menu => {
+                if(menu !== null){
+                    res.send(menu);
+                } else {
+                    next(new ApiError("Menu doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
 
@@ -73,7 +86,13 @@ module.exports = {
         const menuID = req.params.id;
 
         Menu.findByIdAndDelete({ _id: menuID })
-            .then(res.status(200).json({"message": "Successfully removed!"}))
+            .then(menu => {
+                if(menu !== null){
+                    res.status(200).json({"message": "Successfully removed!"})
+                } else {
+                    next(new ApiError("Menu doesn't exist!", 422));
+                }
+            })
             .catch(next);
     },
     
